@@ -1,5 +1,11 @@
 package com.drools.service;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+
 import org.kie.api.definition.type.FactType;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
@@ -42,11 +48,6 @@ public class DroolsRuntimeServiceImpl implements DroolsRuntimeService
 			kieSession.fireAllRules();
 			kieSession.dispose();
 					
-			System.out.println("Total amount : "+factType.get( runtimeInstance, "totalAmount" ));
-			System.out.println("Discount Applied : "+factType.get( runtimeInstance, "discount" ));
-			System.out.println("Total amount after discount : "+factType.get( runtimeInstance, "payableAmount" ));		
-			
-			
 			return newobj;
 		} catch (RepositoryException e) {
 			throw new ServiceException("Drools Service Exception",e);
@@ -68,5 +69,5 @@ public class DroolsRuntimeServiceImpl implements DroolsRuntimeService
 			throw new InvalidJsonException(e);
 		}
 	}
-
+ 
 }
