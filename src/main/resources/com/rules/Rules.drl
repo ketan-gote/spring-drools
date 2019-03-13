@@ -16,4 +16,3 @@ rule "Offer for Diamond"
 		customerCart.setDiscount(20);
 		customerCart.setPayableAmount(customerCart.getTotalAmount() - ((customerCart.getTotalAmount()/100)*customerCart.getDiscount()));
 	end
-	
