@@ -6,10 +6,10 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
 
-import org.eclipse.aether.RepositoryException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.drools.entity.Entity;
+import com.drools.exception.RepositoryException;
 
 public abstract class GenericRepository <T> {
 
@@ -27,20 +27,20 @@ public abstract class GenericRepository <T> {
 	 * THIS METHOD IS USED FOR PERSIST T TYPE OF OBJECT IN DATABASE
 	 * @throws Exception 
 	 * */
-	public void persist(T t) throws Exception {
+	public void persist(T t) throws RepositoryException {
 		PersistenceManager pm = pm();
 		try {
 			pm.setDetachAllOnCommit(true);
 			pm.makePersistent(t);
 		} catch (Exception e) {
-			throw new Exception(e.getMessage());
+			throw new RepositoryException(e);
 		} finally {
 			pm.close();
 		}
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<T> findAll(Object entity) throws Exception {
+	public List<T> findAll(Object entity) throws RepositoryException {
 		
 		PersistenceManager pm = pm();
 		try {
@@ -48,14 +48,14 @@ public abstract class GenericRepository <T> {
 			List<T> list = (List<T>) query.execute();
 			return (List<T>) pm.detachCopyAll(list);
 		} catch (Exception e) {
-			throw new RepositoryException(e.getMessage());
+			throw new RepositoryException(e);
 		} finally {
 			pm.close();
 		}
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Entity findById(Entity entity) throws Exception {
+	public Entity findById(Entity entity) throws RepositoryException{
 		
 		PersistenceManager pm = pm();
 		try {
@@ -66,7 +66,7 @@ public abstract class GenericRepository <T> {
 			Entity newEntity = (Entity) query.execute(entity.primaryKey());
 			return newEntity;
 		} catch (Exception e) {
-			throw new RepositoryException(e.getMessage());
+			throw new RepositoryException(e);
 		} finally {
 			pm.close();
 		}

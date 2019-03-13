@@ -17,6 +17,10 @@ public class DroolsDRL implements Entity{
 	
 	private String dsl;
 
+	private String pkg;
+	
+	private String className;
+	
 	public DroolsDRL(){
 		super();
 	}
@@ -47,6 +51,22 @@ public class DroolsDRL implements Entity{
 
 	public void setDsl(String dsl) {
 		this.dsl = dsl;
+	}
+
+	public String getPkg() {
+		return pkg;
+	}
+
+	public void setPkg(String pkg) {
+		this.pkg = pkg;
+	}
+
+	public String getClassName() {
+		return className;
+	}
+
+	public void setClassName(String className) {
+		this.className = className;
 	}
 
 	@Override

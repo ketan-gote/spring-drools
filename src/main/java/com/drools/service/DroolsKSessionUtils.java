@@ -15,7 +15,7 @@ import org.kie.api.runtime.KieSession;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DroolsServiceImpl {
+public class DroolsKSessionUtils {
 
 	public KieSession getKSession(String drl) {
 		KieServices ks = KieServices.Factory.get();
