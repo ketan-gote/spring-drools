@@ -1,18 +1,6 @@
 package com.drools.service;
 
-import java.io.StringReader;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
-import org.kie.api.KieBase;
-import org.kie.api.KieBaseConfiguration;
-import org.kie.api.KieServices;
-import org.kie.api.builder.KieBuilder;
-import org.kie.api.builder.KieFileSystem;
-import org.kie.api.builder.Message;
 import org.kie.api.definition.type.FactType;
-import org.kie.api.io.ResourceType;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.drools.entity.DroolsDRL;
 import com.drools.repo.DroolsDRLRepository;
-import com.drools.repo.ProductRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -31,35 +18,17 @@ public class DiscountServiceImpl implements DiscountService
 	private KieContainer kieContainer;
 
 	@Autowired
-	private ProductRepository productRepository;
-
-	@Autowired
 	private DroolsDRLRepository droolsDRLRepository;
 	 
+	@Autowired
+	private DroolsServiceImpl droolsSessionHandler;
 	
 	public void applyDiscount() throws Exception {
 		DroolsDRL droolsDrl = droolsDRLRepository.findById("6c2e77ea-5bde-4200-903b-606fc40b74b3");
-		System.out.println(droolsDrl);
-		System.out.println(droolsDrl.getDsl());
-		String drl = droolsDrl.getDsl();
 		
-		String content = drl;
-		System.out.println("Read New Rules set from File");
-		// load up the knowledge base
-		KieServices ks = KieServices.Factory.get();
-		String inMemoryDrlFileName = "src/main/resources/stateFulSessionRule.drl";
-		KieFileSystem kfs = ks.newKieFileSystem();
-		kfs.write(inMemoryDrlFileName, ks.getResources().newReaderResource(new StringReader(content))
-				.setResourceType(ResourceType.DRL));
-		KieBuilder kieBuilder = ks.newKieBuilder(kfs).buildAll();
-		if (kieBuilder.getResults().hasMessages(Message.Level.ERROR)) {
-			System.out.println(kieBuilder.getResults().toString());
-		}
-		KieContainer kContainer = ks.newKieContainer(kieBuilder.getKieModule().getReleaseId());
-		KieBaseConfiguration kbconf = ks.newKieBaseConfiguration();
-		KieBase kbase = kContainer.newKieBase(kbconf);
-		KieSession kieSession = kieSession = kbase.newKieSession();
+		String content = droolsDrl.getDsl();
 		
+		KieSession kieSession = droolsSessionHandler.getKSession(content);
 		
 		FactType factType = kieSession.getKieBase().getFactType("com.drools.examples", "CustomerCart");
 		Object runtimeInstance = factType.newInstance();
