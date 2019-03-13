@@ -11,7 +11,6 @@ import com.drools.exception.InvalidJsonException;
 import com.drools.exception.RepositoryException;
 import com.drools.exception.ServiceException;
 import com.drools.repo.DroolsDRLRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
@@ -24,7 +23,7 @@ public class DroolsRuntimeServiceImpl implements DroolsRuntimeService
 	private DroolsDRLRepository droolsDRLRepository;
 	 
 	@Autowired
-	private DroolsKSessionUtils droolsSessionHandler;
+	private DroolsKSessionUtils ksessionHandler;
 	
 	public Object runRule(String id, String data) throws ServiceException 
 	{
@@ -32,7 +31,7 @@ public class DroolsRuntimeServiceImpl implements DroolsRuntimeService
 		try {
 			DroolsDRL drl = droolsDRLRepository.findById(id);
 			
-			KieSession kieSession = droolsSessionHandler.getKSession(drl.getDsl());
+			KieSession kieSession = ksessionHandler.getKSession(drl.getDsl());
 			
 			FactType factType = kieSession.getKieBase().getFactType(drl.getPkg(), drl.getClassName());
 			Object runtimeInstance = factType.newInstance();
